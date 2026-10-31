@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brightloop | Subscription Management</title>
+
+    <link rel="stylesheet" href="./styles/main.css">
+
+    <!-- Module stylesheets -->
+    <link rel="stylesheet" href="./modules/products/products.css">
+    <link rel="stylesheet" href="./modules/subscriptions/subscriptions.css">
+    <link rel="stylesheet" href="./modules/billing/billing.css">
+    <link rel="stylesheet" href="./modules/dashboard/dashboard.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-logo">B</div>
+                <div class="brand-name">Brightloop</div>
+            </div>
+
+            <div class="sidebar-label">WORKSPACE</div>
+
+            <nav class="navigation">
+
+                <button class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">▦</span>
+                    Dashboard
+                </button>
+
+                <button class="nav-item" data-page="products">
+                    <span class="nav-icon">◈</span>
+                    Products & Plans
+                </button>
+
+                <button class="nav-item" data-page="subscriptions">
+                    <span class="nav-icon">⟳</span>
+                    Subscriptions
+                </button>
+
+                <button class="nav-item" data-page="billing">
+                    <span class="nav-icon">▤</span>
+                    Billing & Payments
+                </button>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="user-avatar">A</div>
+                <div class="user-info">
+                    <strong>Admin</strong>
+                    <span>Administrator</span>
+                </div>
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <header class="topbar">
+
+                <div>
+                    <p class="breadcrumb">Brightloop / <span id="current-page">Dashboard</span></p>
+                </div>
+
+                <div class="topbar-actions">
+                    <span class="notification-icon">♧</span>
+                    <div class="topbar-avatar">A</div>
+                    <span class="admin-name">Admin</span>
+                </div>
+
+            </header>
+
+
+            <!-- DYNAMIC PAGE CONTENT -->
+            <section id="page-content" class="page-content">
+
+                <div class="loading-message">
+                    Loading Brightloop...
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script type="module" src="./app.js"></script>
+
+</body>
+</html>
