@@ -5,20 +5,20 @@
 }
 
 :root {
-    --primary: #6c4df6;
-    --primary-dark: #5436d9;
-    --background: #f6f7fb;
-    --card: #ffffff;
-    --text: #202124;
-    --muted: #747784;
-    --border: #e5e7ef;
-    --success: #159447;
-    --danger: #d83a3a;
-    --warning: #d88900;
+    --primary: #3B82F6;
+    --primary-dark: #2563EB;
+    --background: #0B1020;
+    --card: #18243B;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --border: #25334D;
+    --success: #2DD4BF;
+    --danger: #F87171;
+    --warning: #F59E0B;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: var(--background);
     color: var(--text);
 }
@@ -86,7 +86,7 @@ body {
 }
 
 .btn-secondary {
-    background: white;
+    background: #25334D;
     border: 1px solid var(--border);
     color: var(--text);
 }
@@ -98,7 +98,7 @@ body {
 /* TOOLBAR */
 
 .toolbar {
-    background: white;
+    background: var(--card);
     padding: 16px;
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -135,7 +135,7 @@ body {
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 0 12px;
-    background: white;
+    background: var(--card);
 }
 
 /* STATS */
@@ -148,7 +148,7 @@ body {
 }
 
 .stat-card {
-    background: white;
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 20px;
@@ -209,7 +209,7 @@ body {
 }
 
 .product-card {
-    background: white;
+    background: var(--card);
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 22px;
@@ -286,7 +286,7 @@ body {
 .small-btn {
     flex: 1;
     border: 1px solid var(--border);
-    background: white;
+    background: var(--card);
     padding: 9px;
     border-radius: 7px;
     cursor: pointer;
@@ -382,7 +382,7 @@ body {
 /* EMPTY */
 
 .empty-state {
-    background: white;
+    background: var(--card);
     border: 1px dashed #cfd2dc;
     border-radius: 14px;
     padding: 55px 20px;
@@ -423,7 +423,7 @@ body {
 }
 
 .modal {
-    background: white;
+    background: var(--card);
     width: 100%;
     max-width: 570px;
     max-height: 90vh;
@@ -512,7 +512,7 @@ body {
     position: fixed;
     right: 25px;
     bottom: 25px;
-    background: #202124;
+    background: var(--bg-hover, #25334D);
     color: white;
     padding: 13px 18px;
     border-radius: 8px;

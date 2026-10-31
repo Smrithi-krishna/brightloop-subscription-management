@@ -4,7 +4,8 @@ import { initSubscriptions } from "./modules/subscriptions/subscriptions.js";
 import { initBilling } from "./modules/billing/billing.js";
 import { initDashboard } from "./modules/dashboard/dashboard.js";
 
-// Page configuration
+// Page configuration. Module HTML is injected into the shell, then initialized
+// explicitly so navigation works after the initial document has loaded.
 const pages = {
     dashboard: {
         title: "Dashboard",
@@ -96,16 +97,11 @@ async function loadPage(pageName) {
 
 
 // Sidebar navigation
-document.querySelectorAll(".nav-item").forEach(button => {
-
-    button.addEventListener("click", () => {
-
-        const pageName = button.dataset.page;
-
-        loadPage(pageName);
-
-    });
-
+document.querySelector(".navigation").addEventListener("click", event => {
+    const button = event.target.closest(".nav-item");
+    if (button) {
+        loadPage(button.dataset.page);
+    }
 });
 
 

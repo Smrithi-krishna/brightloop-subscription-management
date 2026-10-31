@@ -1,33 +1,24 @@
 
-// BRIGHTLOOP-Customer and subscription module
+import {
+    addRecord,
+    getData,
+    STORAGE_KEYS,
+    updateRecord,
+    deleteRecord,
+    saveData
+} from "../../shared/store.js";
+
+// BRIGHTLOOP - customer and subscription module
 
 // Shared storage keys
-const CUSTOMER_KEY = "bl_customers";
-const SUBSCRIPTION_KEY = "bl_subscriptions";
-const PLAN_KEY = "bl_plans";
-const PRODUCT_KEY = "bl_products";
+const CUSTOMER_KEY = STORAGE_KEYS.CUSTOMERS;
+const SUBSCRIPTION_KEY = STORAGE_KEYS.SUBSCRIPTIONS;
+const PLAN_KEY = STORAGE_KEYS.PLANS;
+const PRODUCT_KEY = STORAGE_KEYS.PRODUCTS;
 
 
 
 // 1. STORAGE FUNCTIONS
-function getData(key) {
-    if (typeof window.getData === "function") {
-        return window.getData(key) || [];
-    }
-
-    return JSON.parse(localStorage.getItem(key)) || [];
-}
-
-function saveData(key, data) {
-    if (typeof window.saveData === "function") {
-        window.saveData(key, data);
-    } else {
-        localStorage.setItem(key, JSON.stringify(data));
-    }
-}
-
-
-
 // 2. GENERATE UNIQUE IDs
 
 
@@ -41,23 +32,13 @@ function generateId(prefix) {
 // 3. GET ELEMENTS
 
 
-const customerTableBody =
-    document.getElementById("customerTableBody");
-
-const subscriptionTableBody =
-    document.getElementById("subscriptionTableBody");
-
-const customerModal =
-    document.getElementById("customerModal");
-
-const subscriptionModal =
-    document.getElementById("subscriptionModal");
-
-const customerForm =
-    document.getElementById("customerForm");
-
-const subscriptionForm =
-    document.getElementById("subscriptionForm");
+let customerTableBody;
+let subscriptionTableBody;
+let customerModal;
+let subscriptionModal;
+let customerForm;
+let subscriptionForm;
+let tabButtons = [];
 
 let editingCustomerId = null;
 
@@ -140,7 +121,7 @@ function escapeHTML(value) {
 
 // Add or edit a customer
 
-customerForm.addEventListener("submit", function(event) {
+function handleCustomerSubmit(event) {
     event.preventDefault();
 
     const name =
@@ -202,7 +183,7 @@ customerForm.addEventListener("submit", function(event) {
     editingCustomerId = null;
 
     displayCustomers();
-});
+}
 
 
 // Edit customer
@@ -362,7 +343,7 @@ function displaySubscriptions() {
 
 // Create subscription
 
-subscriptionForm.addEventListener("submit", function(event) {
+function handleSubscriptionSubmit(event) {
     event.preventDefault();
 
     const customerId =
@@ -413,11 +394,15 @@ subscriptionForm.addEventListener("submit", function(event) {
         id: generateId("SUB"),
         customerId: customerId,
         planId: planId,
+        productId: selectedPlan.productId,
+        quantity: 1,
+        unitPrice: Number(selectedPlan.price) || 0,
         startDate: startDate,
         expiryDate: expiryDate,
         paymentTerms: paymentTerms,
         status: status,
         isPaused: false,
+        nextBillingDate: expiryDate,
         createdAt: new Date().toISOString()
     };
 
@@ -434,7 +419,7 @@ subscriptionForm.addEventListener("submit", function(event) {
     showToast("Subscription created successfully!");
 
     displaySubscriptions();
-});
+}
 
 
 // Pause subscription
@@ -599,68 +584,7 @@ function updateStatistics() {
 
 
 
-// 9. SEARCH FUNCTIONS
-
-
-document.getElementById("customerSearch")
-    .addEventListener("input", function() {
-
-        const searchValue = this.value.toLowerCase();
-
-        const rows = customerTableBody.querySelectorAll("tr");
-
-        rows.forEach(row => {
-            row.style.display =
-                row.textContent.toLowerCase().includes(searchValue)
-                    ? ""
-                    : "none";
-        });
-    });
-
-
-document.getElementById("subscriptionSearch")
-    .addEventListener("input", function() {
-
-        const searchValue = this.value.toLowerCase();
-
-        const rows = subscriptionTableBody.querySelectorAll("tr");
-
-        rows.forEach(row => {
-            row.style.display =
-                row.textContent.toLowerCase().includes(searchValue)
-                    ? ""
-                    : "none";
-        });
-    });
-
-
-
-// 10. TAB SWITCHING
-
-
-const tabButtons = document.querySelectorAll(".tab-btn");
-
-tabButtons.forEach(button => {
-
-    button.addEventListener("click", function() {
-
-        const selectedTab = this.dataset.tab;
-
-        tabButtons.forEach(tab =>
-            tab.classList.remove("active")
-        );
-
-        document.querySelectorAll(".tab-content").forEach(content =>
-            content.classList.remove("active")
-        );
-
-        this.classList.add("active");
-
-        document.getElementById(selectedTab)
-            .classList.add("active");
-    });
-});
-
+// 9. SEARCH AND TAB HANDLERS ARE WIRED BY initSubscriptions
 
 
 // 11. MODAL FUNCTIONS
@@ -702,51 +626,49 @@ function openSubscriptionModal() {
 }
 
 
-// Connect buttons
-
-document.getElementById("addCustomerBtn")
-    .addEventListener("click", openCustomerModal);
-
-document.getElementById("addCustomerBtn2")
-    .addEventListener("click", openCustomerModal);
-
-document.getElementById("addSubscriptionBtn")
-    .addEventListener("click", openSubscriptionModal);
-
-
-// Close buttons
-
-document.getElementById("closeCustomerModal")
-    .addEventListener("click", () => {
-        customerModal.classList.remove("show");
-    });
-
-document.getElementById("cancelCustomer")
-    .addEventListener("click", () => {
-        customerModal.classList.remove("show");
-    });
-
-document.getElementById("closeSubscriptionModal")
-    .addEventListener("click", () => {
-        subscriptionModal.classList.remove("show");
-    });
-
-document.getElementById("cancelSubscription")
-    .addEventListener("click", () => {
-        subscriptionModal.classList.remove("show");
-    });
-
-
-
 // 12. INITIALIZE DASHBOARD
 
+export function initSubscriptions() {
+    customerTableBody = document.getElementById("customerTableBody");
+    subscriptionTableBody = document.getElementById("subscriptionTableBody");
+    customerModal = document.getElementById("customerModal");
+    subscriptionModal = document.getElementById("subscriptionModal");
+    customerForm = document.getElementById("customerForm");
+    subscriptionForm = document.getElementById("subscriptionForm");
+    tabButtons = [...document.querySelectorAll(".tab-btn")];
 
-function initializeDashboard() {
+    customerForm.addEventListener("submit", handleCustomerSubmit);
+    subscriptionForm.addEventListener("submit", handleSubscriptionSubmit);
+    document.getElementById("customerSearch").addEventListener("input", function() {
+        const searchValue = this.value.toLowerCase();
+        customerTableBody.querySelectorAll("tr").forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(searchValue) ? "" : "none";
+        });
+    });
+    document.getElementById("subscriptionSearch").addEventListener("input", function() {
+        const searchValue = this.value.toLowerCase();
+        subscriptionTableBody.querySelectorAll("tr").forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(searchValue) ? "" : "none";
+        });
+    });
+    tabButtons.forEach(button => button.addEventListener("click", function() {
+        const selectedTab = this.dataset.tab;
+        tabButtons.forEach(tab => tab.classList.toggle("active", tab === this));
+        document.querySelectorAll(".tab-content").forEach(content => {
+            content.classList.toggle("active", content.id === selectedTab);
+        });
+    }));
+
+    document.getElementById("addCustomerBtn").addEventListener("click", openCustomerModal);
+    document.getElementById("addCustomerBtn2").addEventListener("click", openCustomerModal);
+    document.getElementById("addSubscriptionBtn").addEventListener("click", openSubscriptionModal);
+    document.getElementById("closeCustomerModal").addEventListener("click", () => customerModal.classList.remove("show"));
+    document.getElementById("cancelCustomer").addEventListener("click", () => customerModal.classList.remove("show"));
+    document.getElementById("closeSubscriptionModal").addEventListener("click", () => subscriptionModal.classList.remove("show"));
+    document.getElementById("cancelSubscription").addEventListener("click", () => subscriptionModal.classList.remove("show"));
+
     displayCustomers();
     displaySubscriptions();
-
     updateCustomerDropdown();
     updatePlanDropdown();
 }
-
-initializeDashboard();

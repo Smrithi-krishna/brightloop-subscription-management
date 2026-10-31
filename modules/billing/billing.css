@@ -125,12 +125,12 @@ button {
 }
 
 .secondary-btn {
-    background: #eef0f5;
+    background: var(--bg-hover);
     color: var(--text);
 }
 
 .secondary-btn:hover {
-    background: #e2e5ed;
+    background: #344765;
 }
 
 .full-width {

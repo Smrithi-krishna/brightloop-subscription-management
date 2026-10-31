@@ -1,8 +1,18 @@
+import {
+    addRecord,
+    getData,
+    saveData,
+    STORAGE_KEYS as SHARED_KEYS,
+    updateRecord
+} from "../../shared/store.js";
+
 const STORAGE_KEYS = {
-    invoices: "bl_invoices",
-    payments: "bl_payments",
-    subscriptions: "bl_subscriptions",
-    customers: "bl_customers"
+    invoices: SHARED_KEYS.INVOICES,
+    payments: SHARED_KEYS.PAYMENTS,
+    subscriptions: SHARED_KEYS.SUBSCRIPTIONS,
+    customers: SHARED_KEYS.CUSTOMERS,
+    products: SHARED_KEYS.PRODUCTS,
+    plans: SHARED_KEYS.PLANS
 };
 
 
@@ -154,147 +164,44 @@ let invoices = [];
 let payments = [];
 let subscriptions = [];
 let customers = [];
+let products = [];
+let plans = [];
 
 let selectedInvoiceId = null;
 let selectedPaymentInvoiceId = null;
 let selectedPayNowInvoiceId = null;
 
 
-document.addEventListener("DOMContentLoaded", () => {
-
+export function initBilling() {
     setDefaultDates();
-
     loadData();
-
     updateOverdueInvoices();
-
     renderDashboard();
-
     renderInvoices();
-
     populateSubscriptionSelect();
-
     setupEventListeners();
-
-});
+}
 
 
 function loadData() {
 
     invoices = readData(STORAGE_KEYS.invoices);
 
-    payments = readData(STORAGE_KEYS.payments);
+    const storedPayments = readData(STORAGE_KEYS.payments);
+    payments = storedPayments.map(payment =>
+        payment.status === "Completed"
+            ? { ...payment, status: "Successful" }
+            : payment
+    );
+    if (payments.some((payment, index) => payment !== storedPayments[index])) {
+        saveData(STORAGE_KEYS.payments, payments);
+    }
 
     subscriptions = readData(STORAGE_KEYS.subscriptions);
 
     customers = readData(STORAGE_KEYS.customers);
-
-    
-    if (subscriptions.length === 0) {
-
-        const demoCustomerId = "DEMO-CUSTOMER-001";
-        const plans = [
-            {
-                id: "DEMO-CRM-STARTER",
-                productName: "Brightloop CRM",
-                planName: "Starter",
-                unitPrice: 499,
-                description: "Business software",
-                features: "Contact management, lead tracking"
-            },
-            {
-                id: "DEMO-CRM-PROFESSIONAL",
-                productName: "Brightloop CRM",
-                planName: "Professional",
-                unitPrice: 999,
-                description: "Business software",
-                features: "Sales pipeline, team collaboration, reports"
-            },
-            {
-                id: "DEMO-CRM-ENTERPRISE",
-                productName: "Brightloop CRM",
-                planName: "Enterprise",
-                unitPrice: 1999,
-                description: "Business software",
-                features: "Advanced automation, custom reports, priority support"
-            },
-            {
-                id: "DEMO-FLOW-BASIC",
-                productName: "Brightloop Flow",
-                planName: "Basic",
-                unitPrice: 399,
-                description: "Productivity software",
-                features: "Task management, personal boards"
-            },
-            {
-                id: "DEMO-FLOW-TEAM",
-                productName: "Brightloop Flow",
-                planName: "Team",
-                unitPrice: 799,
-                description: "Productivity software",
-                features: "Team workspaces, task assignments, deadlines"
-            },
-            {
-                id: "DEMO-FLOW-BUSINESS",
-                productName: "Brightloop Flow",
-                planName: "Business",
-                unitPrice: 1499,
-                description: "Productivity software",
-                features: "Multiple projects, advanced reports, automation"
-            },
-            {
-                id: "DEMO-CLOUD-PERSONAL",
-                productName: "Brightloop Cloud",
-                planName: "Personal",
-                unitPrice: 199,
-                description: "Cloud storage",
-                features: "100 GB storage"
-            },
-            {
-                id: "DEMO-CLOUD-PROFESSIONAL",
-                productName: "Brightloop Cloud",
-                planName: "Professional",
-                unitPrice: 499,
-                description: "Cloud storage",
-                features: "500 GB storage, file sharing"
-            },
-            {
-                id: "DEMO-CLOUD-BUSINESS",
-                productName: "Brightloop Cloud",
-                planName: "Business",
-                unitPrice: 999,
-                description: "Cloud storage",
-                features: "2 TB storage, team access, advanced controls"
-            },
-            {
-                id: "DEMO-PREMIUM-ANALYTICS",
-                productName: "Premium Analytics",
-                planName: "Optional add-on",
-                unitPrice: 299,
-                description: "Optional add-on for eligible plans",
-                features: "Detailed reports, usage statistics, performance dashboards"
-            }
-        ];
-
-        subscriptions = plans.map(plan => ({
-            ...plan,
-            customerId: demoCustomerId,
-            quantity: 1,
-            taxRate: 18,
-            status: "Active"
-        }));
-
-        if (!customers.some(customer => String(customer.id) === demoCustomerId)) {
-            customers = [
-                ...customers,
-                {
-                    id: demoCustomerId,
-                    name: "Demo Customer"
-                }
-            ];
-        }
-
-    }
+    products = readData(STORAGE_KEYS.products);
+    plans = readData(STORAGE_KEYS.plans);
 
 }
 
@@ -494,6 +401,7 @@ function getSubscriptionCustomerId(subscription) {
 
 
 function getSubscriptionProductName(subscription) {
+    const product = products.find(item => String(item.id) === String(subscription.productId));
 
     return firstDefined(
         subscription,
@@ -503,13 +411,14 @@ function getSubscriptionProductName(subscription) {
             "productTitle",
             "name"
         ],
-        "Brightloop Software"
+        product?.name || "Brightloop Software"
     );
 
 }
 
 
 function getSubscriptionPlanName(subscription) {
+    const plan = plans.find(item => String(item.id) === String(subscription.planId));
 
     return firstDefined(
         subscription,
@@ -518,7 +427,7 @@ function getSubscriptionPlanName(subscription) {
             "plan",
             "planTitle"
         ],
-        "Standard Plan"
+        plan?.name || "Standard Plan"
     );
 
 }
@@ -782,6 +691,8 @@ function calculateInvoice(subscription) {
                         ""
                     ),
 
+                planId: subscription.planId || "",
+                description: `${productName} ${planName}`,
                 productName,
 
                 planName,
@@ -794,7 +705,8 @@ function calculateInvoice(subscription) {
 
                 taxRate,
 
-                lineTotal: lineSubtotal
+                lineTotal: lineSubtotal,
+                amount: lineSubtotal
             }
         ],
 
@@ -803,6 +715,7 @@ function calculateInvoice(subscription) {
         discount: discountAmount,
 
         tax: taxAmount,
+        taxAmount,
 
         taxRate,
 
@@ -922,6 +835,9 @@ function createInvoiceFromSubscription(
 
         totalAmount:
             calculation.totalAmount,
+
+        taxAmount:
+            calculation.taxAmount,
 
         amount:
             calculation.totalAmount,
@@ -2567,9 +2483,9 @@ function recordPayment() {
         date,
 
         status:
-            "Completed",
+            "Successful",
 
-        notes,
+        note: notes,
 
         demo:
             true,
@@ -2862,9 +2778,9 @@ function simulatePayment() {
             getTodayDate(),
 
         status:
-            "Completed",
+            "Successful",
 
-        notes:
+        note:
             "Customer-side simulated demo payment.",
 
         demo:

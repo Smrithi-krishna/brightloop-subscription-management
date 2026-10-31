@@ -1,19 +1,18 @@
+import {
+    addRecord,
+    deleteRecord,
+    getData,
+    saveData,
+    STORAGE_KEYS,
+    updateRecord
+} from "../../shared/store.js";
+
 /* 
    BRIGHTLOOP SOFTWARE
    Product & Plan Management */
 
-/*
-   This module provide:
-
-   getData(key)
-   saveData(key, data)
-   addRecord(key, record)
-   updateRecord(key, id, updates)
-   deleteRecord(key, id)
-*/
-
-const PRODUCT_KEY = "bl_products";
-const PLAN_KEY = "bl_plans";
+const PRODUCT_KEY = STORAGE_KEYS.PRODUCTS;
+const PLAN_KEY = STORAGE_KEYS.PLANS;
 
 let products = [];
 let plans = [];
@@ -21,18 +20,12 @@ let plans = [];
 let editingProductId = null;
 let editingPlanId = null;
 
-
-/*  INITIALIZATION */
-
-document.addEventListener("DOMContentLoaded", () => {
-
+/* INITIALIZATION */
+export function initProducts() {
     loadData();
-
     setupEvents();
-
     renderAll();
-
-});
+}
 
 
 /*  DATA */
@@ -42,7 +35,11 @@ function loadData() {
     try {
 
         products = getData(PRODUCT_KEY) || [];
-        plans = getData(PLAN_KEY) || [];
+        plans = (getData(PLAN_KEY) || []).map(plan => ({
+            ...plan,
+            status: plan.status || "active"
+        }));
+        saveData(PLAN_KEY, plans);
 
     } catch (error) {
 
@@ -533,6 +530,10 @@ function saveProduct(event) {
     }
 
 
+    const existingProduct = editingProductId
+        ? products.find(item => item.id === editingProductId)
+        : null;
+
     const product = {
 
         id:
@@ -543,7 +544,9 @@ function saveProduct(event) {
         type,
         price,
         cost,
-        notes
+        notes,
+        variants: existingProduct?.variants || [],
+        createdAt: existingProduct?.createdAt || new Date().toISOString().slice(0, 10)
 
     };
 
@@ -894,7 +897,10 @@ function savePlan(event) {
         price,
         minQuantity,
         startDate,
-        endDate
+        endDate,
+        status: editingPlanId
+            ? (plans.find(item => item.id === editingPlanId)?.status || "active")
+            : "active"
 
     };
 

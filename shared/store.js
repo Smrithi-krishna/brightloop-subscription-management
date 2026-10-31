@@ -26,7 +26,25 @@ export function getData(key) {
 
         const parsedData = JSON.parse(storedData);
 
-        return Array.isArray(parsedData) ? parsedData : [];
+        if (!Array.isArray(parsedData)) {
+            return [];
+        }
+
+        if (key === STORAGE_KEYS.PAYMENTS) {
+            const normalizedPayments = parsedData.map(payment =>
+                payment.status === "Completed"
+                    ? { ...payment, status: "Successful" }
+                    : payment
+            );
+
+            if (normalizedPayments.some((payment, index) => payment !== parsedData[index])) {
+                localStorage.setItem(key, JSON.stringify(normalizedPayments));
+            }
+
+            return normalizedPayments;
+        }
+
+        return parsedData;
 
     } catch (error) {
         console.error(`Error reading ${key}:`, error);

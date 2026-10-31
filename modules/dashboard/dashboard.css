@@ -7,10 +7,10 @@
     width: 100%;
     max-width: 1500px;
     margin: 0 auto;
-    padding: 8px 4px 30px;
+    padding: 4px 0 34px;
     display: flex;
     flex-direction: column;
-    gap: 26px;
+    gap: 28px;
 }
 
 /* HEADER */
@@ -24,7 +24,7 @@
 }
 
 .page-heading h1 {
-    font-size: 25px;
+    font-size: 26px;
     font-weight: 700;
     letter-spacing: -0.7px;
     color: var(--text-primary);
@@ -51,16 +51,17 @@
 .dashboard-stats {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
+    gap: 18px;
 }
 
 .stat-card {
     position: relative;
-    padding: 19px;
+    padding: 20px;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 13px;
     min-width: 0;
+    min-height: 154px;
     transition: 0.2s ease;
 }
 
@@ -94,7 +95,10 @@
     font-weight: 700;
     letter-spacing: -0.5px;
     margin: 0 0 7px;
-    overflow-wrap: anywhere;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .stat-card span {
@@ -107,7 +111,7 @@
 .dashboard-sections {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 18px;
+    gap: 20px;
 }
 
 .dashboard-sections .card,
@@ -160,6 +164,7 @@
     width: 100%;
     border-collapse: collapse;
     min-width: 320px;
+    table-layout: fixed;
 }
 
 .dashboard-page th {
@@ -179,6 +184,25 @@
     padding: 13px 12px;
     border-top: 1px solid var(--border);
     text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-variant-numeric: tabular-nums;
+}
+
+.dashboard-page th:first-child,
+.dashboard-page td:first-child {
+    width: 42%;
+}
+
+.dashboard-page th:nth-child(2),
+.dashboard-page td:nth-child(2) {
+    width: 36%;
+}
+
+.dashboard-page th:last-child,
+.dashboard-page td:last-child {
+    width: 22%;
 }
 
 .dashboard-page tbody tr:hover {
@@ -218,6 +242,8 @@
     color: var(--text-primary);
     font-size: 22px;
     margin: 9px 0 0;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 }
 
 /* RESPONSIVE */
