@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brightloop | Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../../styles/main.css">
+    <link rel="stylesheet" href="./dashboard.css">
+</head>
+
+<body>
+
+    <main class="dashboard-page">
+
+        <!-- Page Heading -->
+        <header class="page-heading">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Welcome back! Here's what's happening with Brightloop.</p>
+            </div>
+
+            <div class="dashboard-date" id="dashboard-date"></div>
+        </header>
+
+        <!-- Summary Cards -->
+        <section class="dashboard-stats">
+
+            <article class="card stat-card">
+                <div class="stat-icon">📋</div>
+                <p>Active Subscriptions</p>
+                <h2 id="active-subscriptions">0</h2>
+                <span>Currently running subscriptions</span>
+            </article>
+
+            <article class="card stat-card">
+                <div class="stat-icon">💰</div>
+                <p>Revenue Collected</p>
+                <h2 id="revenue-collected">₹0.00</h2>
+                <span>From successful payments</span>
+            </article>
+
+            <article class="card stat-card">
+                <div class="stat-icon">⏳</div>
+                <p>Outstanding Amount</p>
+                <h2 id="outstanding-amount">₹0.00</h2>
+                <span>Pending invoice balance</span>
+            </article>
+
+            <article class="card stat-card">
+                <div class="stat-icon">⚠️</div>
+                <p>Overdue Invoices</p>
+                <h2 id="overdue-invoices">0</h2>
+                <span>Invoices past their due date</span>
+            </article>
+
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="dashboard-sections">
+
+            <!-- Recent Subscriptions -->
+            <article class="card">
+                <div class="section-heading">
+                    <div>
+                        <h3>Recent Subscriptions</h3>
+                        <p>Latest customer subscriptions</p>
+                    </div>
+                    <span class="section-icon">📋</span>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subscription ID</th>
+                                <th>Customer</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="recent-subscriptions">
+                            <tr>
+                                <td colspan="3">No subscriptions yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <!-- Recent Payments -->
+            <article class="card">
+                <div class="section-heading">
+                    <div>
+                        <h3>Recent Payments</h3>
+                        <p>Latest successful transactions</p>
+                    </div>
+                    <span class="section-icon">💳</span>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Invoice ID</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="recent-payments">
+                            <tr>
+                                <td colspan="3">No payments yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+        </section>
+
+        <!-- Invoice Overview -->
+        <section class="card invoice-overview">
+            <div class="section-heading">
+                <div>
+                    <h3>Invoice Overview</h3>
+                    <p>Keep track of your billing activity</p>
+                </div>
+                <span class="section-icon">🧾</span>
+            </div>
+
+            <div class="invoice-summary">
+                <div>
+                    <span>Total Invoices</span>
+                    <h2 id="total-invoices">0</h2>
+                </div>
+
+                <div>
+                    <span>Paid Invoices</span>
+                    <h2 id="paid-invoices">0</h2>
+                </div>
+
+                <div>
+                    <span>Pending Invoices</span>
+                    <h2 id="pending-invoices">0</h2>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script type="module" src="./dashboard.js"></script>
+
+</body>
+</html>
