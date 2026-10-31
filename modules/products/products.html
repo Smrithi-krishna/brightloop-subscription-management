@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products & Plans - Brightloop</title>
+    <link rel="stylesheet" href="products.css">
+</head>
+
+<body>
+
+    <div class="products-page">
+
+        <!-- Header -->
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">BRIGHTLOOP SOFTWARE</p>
+                <h1>Products & Plans</h1>
+                <p class="subtitle">
+                    Manage products, pricing and subscription plans from one place.
+                </p>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-secondary" id="addPlanBtn">
+                    + Add Plan
+                </button>
+                <button class="btn btn-primary" id="addProductBtn">
+                    + Add Product
+                </button>
+            </div>
+        </header>
+
+        <!-- Search -->
+        <section class="toolbar">
+            <div class="search-box">
+                <span>⌕</span>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search products or plans..."
+                >
+            </div>
+
+            <select id="typeFilter">
+                <option value="all">All Types</option>
+                <option value="SaaS">SaaS</option>
+                <option value="Add-on">Add-on</option>
+                <option value="Service">Service</option>
+                <option value="Other">Other</option>
+            </select>
+        </section>
+
+        <!-- Statistics -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon">◈</div>
+                <div>
+                    <span>Total Products</span>
+                    <strong id="totalProducts">0</strong>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">◇</div>
+                <div>
+                    <span>Total Plans</span>
+                    <strong id="totalPlans">0</strong>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✓</div>
+                <div>
+                    <span>Active Plans</span>
+                    <strong id="activePlans">0</strong>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Products -->
+        <section class="content-section">
+
+            <div class="section-heading">
+                <div>
+                    <h2>Products</h2>
+                    <p>Manage your Brightloop software products.</p>
+                </div>
+            </div>
+
+            <div id="productsContainer" class="products-grid"></div>
+
+            <div id="emptyProducts" class="empty-state hidden">
+                <div class="empty-icon">◈</div>
+                <h3>No products found</h3>
+                <p>Create your first product to get started.</p>
+                <button class="btn btn-primary" id="emptyAddProduct">
+                    + Add Product
+                </button>
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- Product Form -->
+    <div class="modal-overlay hidden" id="productModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">PRODUCT</p>
+                    <h2 id="productModalTitle">Add Product</h2>
+                </div>
+
+                <button class="close-btn" id="closeProductModal">&times;</button>
+            </div>
+
+            <form id="productForm">
+
+                <input type="hidden" id="productId">
+
+                <div class="form-group">
+                    <label for="productName">
+                        Product Name <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="productName"
+                        placeholder="e.g. Brightloop CRM"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="productType">
+                            Product Type <span>*</span>
+                        </label>
+
+                        <select id="productType" required>
+                            <option value="">Select type</option>
+                            <option value="SaaS">SaaS</option>
+                            <option value="Add-on">Add-on</option>
+                            <option value="Service">Service</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productPrice">
+                            Sales Price (₹) <span>*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="productPrice"
+                            min="0"
+                            step="0.01"
+                            placeholder="999"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="productCost">
+                        Cost Price (₹) <span>*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="productCost"
+                        min="0"
+                        step="0.01"
+                        placeholder="350"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="productNotes">Notes</label>
+
+                    <textarea
+                        id="productNotes"
+                        rows="4"
+                        placeholder="Describe the product..."
+                    ></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelProduct">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-primary">
+                        Save Product
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Plan model -->
+    <div class="modal-overlay hidden" id="planModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">SUBSCRIPTION PLAN</p>
+                    <h2 id="planModalTitle">Add Plan</h2>
+                </div>
+
+                <button class="close-btn" id="closePlanModal">&times;</button>
+            </div>
+
+            <form id="planForm">
+
+                <input type="hidden" id="planId">
+
+                <div class="form-group">
+                    <label for="planProduct">
+                        Product <span>*</span>
+                    </label>
+
+                    <select id="planProduct" required>
+                        <option value="">Select product</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="planName">
+                        Plan Name <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="planName"
+                        placeholder="e.g. Professional"
+                        required
+                    >
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="planPrice">
+                            Price (₹) <span>*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            id="planPrice"
+                            min="0"
+                            step="0.01"
+                            placeholder="999"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="planInterval">
+                            Billing Interval <span>*</span>
+                        </label>
+
+                        <select id="planInterval" required>
+                            <option value="">Select interval</option>
+                            <option value="Daily">Daily</option>
+                            <option value="Weekly">Weekly</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="Yearly">Yearly</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="planQuantity">
+                        Minimum Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="planQuantity"
+                        min="1"
+                        value="1"
+                    >
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="planStartDate">
+                            Start Date
+                        </label>
+
+                        <input type="date" id="planStartDate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="planEndDate">
+                            End Date
+                        </label>
+
+                        <input type="date" id="planEndDate">
+                    </div>
+
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        id="cancelPlan"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Save Plan
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- product -->
+    <div id="toast" class="toast"></div>
+
+    <script src="../../shared/store.js"></script>
+    <script src="products.js"></script>
+
+</body>
+</html>
