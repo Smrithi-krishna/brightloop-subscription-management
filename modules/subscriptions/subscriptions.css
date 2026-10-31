@@ -1,0 +1,660 @@
+
+/* 
+   BRIGHTLOOP SOFTWARE
+   CUSTOMER & SUBSCRIPTION MANAGEMENT
+    */
+
+/* 1. GLOBAL STYLES */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #0B1020;
+    color: #E5EAF5;
+    min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    transition: 0.2s ease;
+}
+
+
+/* 2. MAIN LAYOUT */
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    min-width: 0;
+}
+
+
+/* 3. SIDEBAR */
+
+.sidebar {
+    width: 245px;
+    min-width: 245px;
+    background: #111A2E;
+    padding: 28px 18px;
+    border-right: 1px solid #25334D;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 750;
+    color: #FFFFFF;
+    margin-bottom: 40px;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: #3B82F6;
+}
+
+.sidebar-menu {
+    list-style: none;
+}
+
+.sidebar-menu li {
+    margin-bottom: 10px;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 15px;
+    text-decoration: none;
+    color: #94A3B8;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background: #25334D;
+    color: #60A5FA;
+}
+
+
+/* 4. PAGE HEADER */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 15px;
+}
+
+.page-header h1 {
+    font-size: 26px;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+}
+
+.page-header p {
+    font-size: 14px;
+    color: #94A3B8;
+}
+
+
+/* 5. BUTTONS */
+
+.btn {
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: #3B82F6;
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    background: #2563EB;
+}
+
+.btn-secondary {
+    background: #25334D;
+    color: #E5EAF5;
+}
+
+.btn-secondary:hover {
+    background: #34445F;
+}
+
+.btn-danger {
+    background: #7F1D2D;
+    color: #FCA5A5;
+}
+
+.btn-danger:hover {
+    background: #991B1B;
+}
+
+.btn-success {
+    background: #134E4A;
+    color: #5EEAD4;
+}
+
+.btn-success:hover {
+    background: #115E59;
+}
+
+
+/* 6. DASHBOARD STATISTICS */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #18243B;
+    border: 1px solid #25334D;
+    border-radius: 12px;
+    padding: 22px;
+    transition: 0.2s;
+}
+
+.stat-card:hover {
+    border-color: #3B82F6;
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    font-size: 23px;
+    margin-bottom: 12px;
+}
+
+.stat-card p {
+    color: #94A3B8;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.stat-card h2 {
+    color: #FFFFFF;
+    font-size: 28px;
+}
+
+
+/* 7. NAVIGATION TABS */
+
+.tabs {
+    display: flex;
+    gap: 25px;
+    border-bottom: 1px solid #25334D;
+    margin-bottom: 25px;
+}
+
+.tab-btn {
+    background: transparent;
+    color: #94A3B8;
+    padding: 13px 5px;
+    font-size: 15px;
+    border-bottom: 2px solid transparent;
+}
+
+.tab-btn:hover {
+    color: #60A5FA;
+}
+
+.tab-btn.active {
+    color: #60A5FA;
+    border-bottom-color: #3B82F6;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+
+/* 8. CONTENT PANELS */
+
+.panel {
+    background: #18243B;
+    border: 1px solid #25334D;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 25px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.panel-header h2 {
+    color: #FFFFFF;
+    font-size: 19px;
+}
+
+
+/* 9. SEARCH AND FILTERS */
+
+.search-filter {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.search-box {
+    flex: 1;
+}
+
+.search-box input {
+    width: 100%;
+}
+
+input,
+select,
+textarea {
+    background: #111A2E;
+    color: #E5EAF5;
+    border: 1px solid #34445F;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #64748B;
+}
+
+select option {
+    background: #18243B;
+    color: #FFFFFF;
+}
+
+
+/* 10. TABLES */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #111A2E;
+}
+
+th {
+    text-align: left;
+    padding: 15px;
+    color: #94A3B8;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 16px 15px;
+    color: #D5DDED;
+    font-size: 14px;
+    border-bottom: 1px solid #25334D;
+}
+
+tbody tr:hover {
+    background: #202E47;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* 11. ACTION BUTTONS */
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: #25334D;
+    color: #CBD5E1;
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.action-btn:hover {
+    background: #34445F;
+    color: #FFFFFF;
+}
+
+
+/* 12. SUBSCRIPTION STATUS */
+
+.status {
+    display: inline-block;
+    padding: 6px 11px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-draft {
+    background: #334155;
+    color: #CBD5E1;
+}
+
+.status-quotation {
+    background: #312E81;
+    color: #C4B5FD;
+}
+
+.status-confirmed {
+    background: #164E63;
+    color: #67E8F9;
+}
+
+.status-active {
+    background: #134E4A;
+    color: #5EEAD4;
+}
+
+.status-paused {
+    background: #78350F;
+    color: #FCD34D;
+}
+
+.status-closed {
+    background: #3F3F46;
+    color: #D4D4D8;
+}
+
+.status-cancelled {
+    background: #7F1D2D;
+    color: #FCA5A5;
+}
+
+
+/* 13. FORMS */
+
+.form-container {
+    max-width: 850px;
+    margin: auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #CBD5E1;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+
+/* 14. MODALS */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: #18243B;
+    border: 1px solid #34445F;
+    border-radius: 14px;
+    padding: 28px;
+    width: 100%;
+    max-width: 650px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.modal-header h2 {
+    font-size: 21px;
+    color: #FFFFFF;
+}
+
+.close-btn {
+    background: transparent;
+    color: #94A3B8;
+    font-size: 25px;
+}
+
+.close-btn:hover {
+    color: #FFFFFF;
+}
+
+
+/* 15. DETAILS SECTION */
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.detail-item {
+    background: #111A2E;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.detail-item label {
+    display: block;
+    color: #94A3B8;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.detail-item p {
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* 16. EMPTY STATE */
+
+.empty-state {
+    text-align: center;
+    padding: 45px 20px;
+    color: #94A3B8;
+}
+
+.empty-state h3 {
+    color: #E5EAF5;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 14px;
+}
+
+
+/* 17. TOAST NOTIFICATIONS */
+
+.toast {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #134E4A;
+    color: #99F6E4;
+    padding: 14px 22px;
+    border-radius: 8px;
+    display: none;
+    z-index: 2000;
+}
+
+.toast.show {
+    display: block;
+}
+
+
+/* 18. RESPONSIVE DESIGN */
+
+@media (max-width: 1000px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: 0;
+        padding: 15px;
+    }
+
+    .logo {
+        margin-bottom: 15px;
+    }
+
+    .sidebar-menu {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .sidebar-menu li {
+        margin: 0;
+    }
+
+    .main-content {
+        padding: 18px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .form-grid,
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .search-filter {
+        flex-direction: column;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .panel {
+        padding: 15px;
+    }
+
+    .tabs {
+        gap: 15px;
+    }
+
+    .modal-content {
+        padding: 18px;
+    }
+
+    .panel-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+}
