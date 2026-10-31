@@ -1,4 +1,3 @@
-
 /* 
    BRIGHTLOOP SOFTWARE
    CUSTOMER & SUBSCRIPTION MANAGEMENT
@@ -464,7 +463,7 @@ tbody tr:last-child td {
 
 /* 14. MODALS */
 
-.modal {
+.container .modal {
     display: none;
     position: fixed;
     inset: 0;
@@ -475,7 +474,7 @@ tbody tr:last-child td {
     padding: 20px;
 }
 
-.modal.show {
+.container .modal.show {
     display: flex;
 }
 
@@ -658,3 +657,4 @@ tbody tr:last-child td {
     }
 
 }
+.customer-view .admin-only { display: none !important; }

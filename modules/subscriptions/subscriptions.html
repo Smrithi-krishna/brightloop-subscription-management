@@ -21,7 +21,7 @@
                 <p>Manage your customers and their subscriptions.</p>
             </div>
 
-            <button class="btn btn-primary" id="addCustomerBtn">
+            <button class="btn btn-primary admin-only" id="addCustomerBtn">
                 + Add Customer
             </button>
         </header>
@@ -60,7 +60,7 @@
         <!-- Tabs -->
         <section class="tabs">
 
-            <button class="tab-btn active" data-tab="customers">
+            <button class="tab-btn active admin-only" data-tab="customers">
                 Customers
             </button>
 
@@ -72,7 +72,7 @@
 
 
         <!-- Customers Tab -->
-        <section class="tab-content active" id="customers">
+        <section class="tab-content active admin-only" id="customers">
 
             <div class="panel">
 
@@ -167,7 +167,7 @@
 
 
 <!-- Add Customer Modal -->
-<div class="modal" id="customerModal">
+<div class="modal admin-only" id="customerModal">
 
     <div class="modal-content">
 

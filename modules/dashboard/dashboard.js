@@ -3,18 +3,36 @@ import {
     STORAGE_KEYS,
     getData
 } from "../../shared/store.js";
+import { getCurrentUser, ensureCustomerRecord } from "../../shared/auth.js";
 
 /* =================================
    BRIGHTLOOP DASHBOARD
 ================================= */
 
 export function initDashboard(container) {
+    const currentUser = getCurrentUser();
+    const ownCustomer = currentUser?.role === "Customer"
+        ? ensureCustomerRecord(currentUser)
+        : null;
 
     // Read data from shared localStorage
-    const subscriptions = getData(STORAGE_KEYS.SUBSCRIPTIONS);
-    const invoices = getData(STORAGE_KEYS.INVOICES);
-    const payments = getData(STORAGE_KEYS.PAYMENTS);
-    const customers = getData(STORAGE_KEYS.CUSTOMERS);
+    const allSubscriptions = getData(STORAGE_KEYS.SUBSCRIPTIONS);
+    const allInvoices = getData(STORAGE_KEYS.INVOICES);
+    const allPayments = getData(STORAGE_KEYS.PAYMENTS);
+    const allCustomers = getData(STORAGE_KEYS.CUSTOMERS);
+    const products = getData(STORAGE_KEYS.PRODUCTS);
+    const subscriptions = ownCustomer
+        ? allSubscriptions.filter(item => item.customerId === ownCustomer.id)
+        : allSubscriptions;
+    const invoices = ownCustomer
+        ? allInvoices.filter(item => item.customerId === ownCustomer.id)
+        : allInvoices;
+    const payments = ownCustomer
+        ? allPayments.filter(payment => invoices.some(invoice => invoice.id === payment.invoiceId))
+        : allPayments;
+    const customers = ownCustomer
+        ? allCustomers.filter(item => item.id === ownCustomer.id)
+        : allCustomers;
 
     // Currency formatter
     const formatMoney = (amount) => {
@@ -110,6 +128,21 @@ export function initDashboard(container) {
     };
 
     updateText(
+        "#total-products",
+        products.length
+    );
+
+    updateText(
+        "#total-customers",
+        customers.length
+    );
+
+    updateText(
+        "#total-subscriptions",
+        subscriptions.length
+    );
+
+    updateText(
         "#active-subscriptions",
         activeSubscriptions.length
     );
@@ -130,13 +163,17 @@ export function initDashboard(container) {
     );
 
     // 5. Invoice Overview
-    const paidInvoices = invoices.filter(
-        invoice => invoice.status === "Paid"
-    );
+    const paidInvoices = invoices.filter(invoice => {
+        const paid = successfulPayments
+            .filter(payment => payment.invoiceId === invoice.id)
+            .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
+        return invoice.status === "Paid" ||
+            invoice.paymentStatus === "Paid" ||
+            paid >= Number(invoice.amount || invoice.totalAmount || 0);
+    });
 
-    const pendingInvoices = invoices.filter(
-        invoice => invoice.status !== "Paid"
-    );
+    const paidInvoiceIds = new Set(paidInvoices.map(invoice => invoice.id));
+    const pendingInvoices = invoices.filter(invoice => !paidInvoiceIds.has(invoice.id));
 
     updateText("#total-invoices", invoices.length);
     updateText("#paid-invoices", paidInvoices.length);

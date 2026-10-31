@@ -21,6 +21,36 @@
 
 <body>
 
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-card">
+            <div class="brand auth-brand"><div class="brand-logo">B</div><div class="brand-name">Brightloop</div></div>
+            <p class="eyebrow">DEMO ACCESS</p>
+            <h1>Subscription management, connected.</h1>
+            <p class="auth-copy">Use the demo identities below. This localStorage authentication is for demonstration only and is not production security.</p>
+            <form id="login-form">
+                <label for="login-name">Name</label>
+                <input id="login-name" required placeholder="Smrithi Krishna">
+                <label for="login-password">Password</label>
+                <input id="login-password" type="password" required placeholder="admin123">
+                <button class="btn btn-primary" type="submit">Sign in</button>
+                <p id="login-error" class="auth-error" role="alert"></p>
+            </form>
+            <form id="signup-form" class="hidden">
+                <label for="signup-name">Customer name</label>
+                <input id="signup-name" required placeholder="Your name">
+                <label for="signup-password">Password</label>
+                <input id="signup-password" type="password" minlength="4" required placeholder="At least 4 characters">
+                <button class="btn btn-primary" type="submit">Create customer account</button>
+                <p id="signup-error" class="auth-error" role="alert"></p>
+            </form>
+            <button type="button" class="auth-switch" id="signupToggle">Create a customer account</button>
+            <div class="demo-identities">
+                <button type="button" data-demo-login="admin">Admin demo · Smrithi Krishna</button>
+                <button type="button" data-demo-login="customer">Customer demo · Letchu</button>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
 
         <!-- SIDEBAR -->
@@ -58,11 +88,12 @@
             </nav>
 
             <div class="sidebar-bottom">
-                <div class="user-avatar">A</div>
+                <div class="user-avatar" id="sidebar-avatar">A</div>
                 <div class="user-info">
-                    <strong>Admin</strong>
-                    <span>Administrator</span>
+                    <strong id="sidebar-user-name">Admin</strong>
+                    <span id="sidebar-user-role">Administrator</span>
                 </div>
+                <button class="logout-btn" id="logoutBtn" type="button" title="Log out">↪</button>
             </div>
 
         </aside>
@@ -78,9 +109,10 @@
                 </div>
 
                 <div class="topbar-actions">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open navigation">☰</button>
                     <span class="notification-icon">♧</span>
-                    <div class="topbar-avatar">A</div>
-                    <span class="admin-name">Admin</span>
+                    <div class="topbar-avatar" id="topbar-avatar">A</div>
+                    <span class="admin-name" id="topbar-user-name">Admin</span>
                 </div>
 
             </header>

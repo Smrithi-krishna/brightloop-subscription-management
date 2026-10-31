@@ -14,13 +14,15 @@
         <header class="page-header">
             <div>
                 <p class="eyebrow">BRIGHTLOOP SOFTWARE</p>
-                <h1>Products & Plans</h1>
-                <p class="subtitle">
+                <h1 class="admin-only">Products & Plans</h1>
+                <h1 class="customer-only">Browse Products</h1>
+                <p class="subtitle admin-only">
                     Manage products, pricing and subscription plans from one place.
                 </p>
+                <p class="subtitle customer-only">Choose a Brightloop product and plan for your workflow.</p>
             </div>
 
-            <div class="header-actions">
+            <div class="header-actions admin-only">
                 <button class="btn btn-secondary" id="addPlanBtn">
                     + Add Plan
                 </button>
@@ -31,7 +33,7 @@
         </header>
 
         <!-- Search -->
-        <section class="toolbar">
+        <section class="toolbar admin-only">
             <div class="search-box">
                 <span>⌕</span>
                 <input
@@ -51,7 +53,7 @@
         </section>
 
         <!-- Statistics -->
-        <section class="stats-grid">
+        <section class="stats-grid admin-only">
 
             <div class="stat-card">
                 <div class="stat-icon">◈</div>
@@ -84,8 +86,10 @@
 
             <div class="section-heading">
                 <div>
-                    <h2>Products</h2>
-                    <p>Manage your Brightloop software products.</p>
+                    <h2 class="admin-only">Products</h2>
+                    <h2 class="customer-only">Browse Products</h2>
+                    <p class="admin-only">Manage your Brightloop software products.</p>
+                    <p class="customer-only">Choose a plan that fits your workflow.</p>
                 </div>
             </div>
 
@@ -95,7 +99,7 @@
                 <div class="empty-icon">◈</div>
                 <h3>No products found</h3>
                 <p>Create your first product to get started.</p>
-                <button class="btn btn-primary" id="emptyAddProduct">
+                <button class="btn btn-primary admin-only" id="emptyAddProduct">
                     + Add Product
                 </button>
             </div>

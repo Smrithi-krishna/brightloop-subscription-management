@@ -6,6 +6,7 @@ import {
     STORAGE_KEYS,
     updateRecord
 } from "../../shared/store.js";
+import { getCurrentUser, seedDemoCatalogue } from "../../shared/auth.js";
 
 /* 
    BRIGHTLOOP SOFTWARE
@@ -19,11 +20,16 @@ let plans = [];
 
 let editingProductId = null;
 let editingPlanId = null;
+let currentUser = null;
 
 /* INITIALIZATION */
 export function initProducts() {
+    currentUser = getCurrentUser();
+    seedDemoCatalogue();
     loadData();
     setupEvents();
+    const page = document.querySelector(".products-page");
+    page?.classList.toggle("customer-view", currentUser?.role === "Customer");
     renderAll();
 }
 
@@ -193,6 +199,23 @@ function createProductCard(product) {
     const notes =
         product.notes ||
         "No product description available.";
+
+    if (currentUser?.role === "Customer") {
+        return `
+        <article class="product-card customer-product-card">
+            <div class="product-top">
+                <div><div class="product-name">${escapeHTML(product.name)}</div><span class="product-type">${escapeHTML(product.type)}</span></div>
+                <div class="product-illustration">◈</div>
+            </div>
+            <p class="product-notes">${escapeHTML(notes)}</p>
+            ${productPlans.length ? createPlanList(productPlans) : '<p class="text-muted">Plans are being prepared.</p>'}
+            <div class="card-actions">
+                ${productPlans.filter(isPlanActive).map(plan => `
+                    <button class="btn btn-primary" data-action="select-plan" data-id="${escapeHTML(plan.id)}">Select ${escapeHTML(plan.name)}</button>
+                `).join("")}
+            </div>
+        </article>`;
+    }
 
     return `
         <article class="product-card">
@@ -401,6 +424,20 @@ function handleCardActions(event) {
             deletePlan(id);
             break;
 
+        case "select-plan": {
+            const selectedPlan = plans.find(plan => plan.id === id);
+            if (!selectedPlan) {
+                showToast("That plan is no longer available.");
+                return;
+            }
+            sessionStorage.setItem("bl_pending_plan", JSON.stringify({
+                productId: selectedPlan.productId,
+                planId: selectedPlan.id
+            }));
+            window.Brightloop?.navigate("subscriptions");
+            break;
+        }
+
     }
 
 }
@@ -409,6 +446,10 @@ function handleCardActions(event) {
 /*  PRODUCT MODAL */
 
 function openAddProductModal() {
+    if (currentUser?.role !== "Admin") {
+        showToast("Only administrators can manage products.");
+        return;
+    }
 
     editingProductId = null;
 
@@ -422,11 +463,16 @@ function openAddProductModal() {
     document
         .getElementById("productModal")
         .classList.remove("hidden");
+    document.getElementById("productModal").classList.add("show");
 
 }
 
 
 function openEditProductModal(id) {
+    if (currentUser?.role !== "Admin") {
+        showToast("Only administrators can manage products.");
+        return;
+    }
 
     const product =
         products.find(item => item.id === id);
@@ -460,6 +506,7 @@ function openEditProductModal(id) {
     document
         .getElementById("productModal")
         .classList.remove("hidden");
+    document.getElementById("productModal").classList.add("show");
 
 }
 
@@ -468,7 +515,8 @@ function closeProductModal() {
 
     document
         .getElementById("productModal")
-        .classList.add("hidden");
+        .classList.remove("show");
+    document.getElementById("productModal").classList.add("hidden");
 
     editingProductId = null;
 
@@ -480,6 +528,10 @@ function closeProductModal() {
 function saveProduct(event) {
 
     event.preventDefault();
+    if (currentUser?.role !== "Admin") {
+        showToast("Only administrators can manage products.");
+        return;
+    }
 
     const name =
         document.getElementById("productName").value.trim();
@@ -594,6 +646,10 @@ function saveProduct(event) {
 /*   DELETE PRODUCT */
 
 function deleteProduct(id) {
+    if (currentUser?.role !== "Admin") {
+        showToast("Only administrators can manage products.");
+        return;
+    }
 
     const product =
         products.find(item => item.id === id);
@@ -667,6 +723,10 @@ function deleteProduct(id) {
 /*  PLAN MODAL*/
 
 function openAddPlanModal(productId = "") {
+    if (currentUser?.role !== "Admin") {
+        showToast("Only administrators can manage plans.");
+        return;
+    }
 
     if (products.length === 0) {
 
@@ -702,11 +762,16 @@ function openAddPlanModal(productId = "") {
     document
         .getElementById("planModal")
         .classList.remove("hidden");
+    document.getElementById("planModal").classList.add("show");
 
 }
 
 
 function openEditPlanModal(id) {
+    if (currentUser?.role !== "Admin") {
+        showToast("Only administrators can manage plans.");
+        return;
+    }
 
     const plan =
         plans.find(item => item.id === id);
@@ -750,6 +815,7 @@ function openEditPlanModal(id) {
     document
         .getElementById("planModal")
         .classList.remove("hidden");
+    document.getElementById("planModal").classList.add("show");
 
 }
 
@@ -758,7 +824,8 @@ function closePlanModal() {
 
     document
         .getElementById("planModal")
-        .classList.add("hidden");
+        .classList.remove("show");
+    document.getElementById("planModal").classList.add("hidden");
 
     editingPlanId = null;
 
@@ -808,6 +875,10 @@ function populateProductSelect() {
 function savePlan(event) {
 
     event.preventDefault();
+    if (currentUser?.role !== "Admin") {
+        showToast("Only administrators can manage plans.");
+        return;
+    }
 
 
     const productId =
@@ -951,6 +1022,10 @@ function savePlan(event) {
    ========================================================= */
 
 function deletePlan(id) {
+    if (currentUser?.role !== "Admin") {
+        showToast("Only administrators can manage plans.");
+        return;
+    }
 
     const plan =
         plans.find(item => item.id === id);

@@ -579,3 +579,8 @@ body {
     }
 
 }
+.customer-only { display: none; }
+.customer-view .admin-only { display: none !important; }
+.customer-view .customer-only { display: block; }
+.customer-product-card .plan-actions { display: none; }
+.product-illustration { color: var(--primary); font-size: 30px; }
