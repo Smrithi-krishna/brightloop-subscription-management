@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Brightloop Billing</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div class="billing-page">
+
+    <header class="billing-header no-print">
+
+        <div>
+            <p class="eyebrow">BRIGHTLOOP SOFTWARE</p>
+            <h1>Billing & Payments</h1>
+            <p class="subtitle">
+                Manage invoices, payments and outstanding customer balances.
+            </p>
+        </div>
+
+        <button class="primary-btn" id="generateInvoiceBtn">
+            + Generate Invoice
+        </button>
+
+    </header>
+
+    <section class="palette-preview no-print" aria-label="Brightloop colour palette">
+        <span class="palette-label">Colour palette</span>
+        <span class="palette-swatch" style="--swatch-color: #0B1020" title="Main background"></span>
+        <span class="palette-swatch" style="--swatch-color: #111A2E" title="Sidebar background"></span>
+        <span class="palette-swatch" style="--swatch-color: #18243B" title="Card background"></span>
+        <span class="palette-swatch" style="--swatch-color: #25334D" title="Border"></span>
+        <span class="palette-swatch" style="--swatch-color: #3B82F6" title="Primary blue"></span>
+        <span class="palette-swatch" style="--swatch-color: #2563EB" title="Primary hover"></span>
+        <span class="palette-swatch" style="--swatch-color: #8B5CF6" title="Accent purple"></span>
+        <span class="palette-swatch" style="--swatch-color: #2DD4BF" title="Success teal"></span>
+        <span class="palette-swatch" style="--swatch-color: #F59E0B" title="Warning amber"></span>
+        <span class="palette-swatch" style="--swatch-color: #F87171" title="Danger red"></span>
+        <span class="palette-swatch" style="--swatch-color: #F8FAFC" title="Primary text"></span>
+        <span class="palette-swatch" style="--swatch-color: #94A3B8" title="Secondary text"></span>
+        <span class="palette-swatch" style="--swatch-color: #64748B" title="Muted text"></span>
+    </section>
+
+    <section class="summary-grid no-print">
+
+        <div class="summary-card">
+            <div class="summary-icon">▤</div>
+            <div>
+                <p>Total Invoices</p>
+                <h2 id="totalInvoices">0</h2>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">₹</div>
+            <div>
+                <p>Total Billed</p>
+                <h2 id="totalBilled">₹0.00</h2>
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-icon">◷</div>
+            <div>
+                <p>Outstanding</p>
+                <h2 id="totalOutstanding">₹0.00</h2>
+            </div>
+        </div>
+
+        <div class="summary-card overdue-card">
+            <div class="summary-icon">!</div>
+            <div>
+                <p>Overdue</p>
+                <h2 id="totalOverdue">₹0.00</h2>
+            </div>
+        </div>
+
+        <div class="summary-card paid-card">
+            <div class="summary-icon">✓</div>
+            <div>
+                <p>Collected</p>
+                <h2 id="totalCollected">₹0.00</h2>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="billing-card no-print">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Invoices</h2>
+                <p>View and manage customer invoices.</p>
+            </div>
+
+            <div class="invoice-tools">
+
+                <input
+                    type="text"
+                    id="invoiceSearch"
+                    placeholder="Search invoice or customer..."
+                >
+
+                <select id="invoiceFilter">
+                    <option value="all">All</option>
+                    <option value="Draft">Draft</option>
+                    <option value="Confirmed">Confirmed</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Outstanding">Outstanding</option>
+                    <option value="Overdue">Overdue</option>
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Invoice</th>
+                        <th>Customer</th>
+                        <th>Subscription</th>
+                        <th>Amount</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="invoiceTableBody">
+                </tbody>
+
+            </table>
+
+            <div id="emptyState" class="empty-state">
+                <div class="empty-icon">▤</div>
+                <h3>No invoices found</h3>
+                <p>
+                    Generate an invoice from a confirmed or active subscription.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <div class="modal-overlay" id="invoiceModal">
+
+        <div class="modal invoice-modal">
+
+            <button class="close-btn no-print" data-close="invoiceModal">
+                ×
+            </button>
+
+            <div id="invoiceDetails">
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal-overlay" id="generateModal">
+
+        <div class="modal no-print">
+
+            <button class="close-btn" data-close="generateModal">
+                ×
+            </button>
+
+            <div class="modal-header">
+                <p class="eyebrow">NEW INVOICE</p>
+                <h2>Generate Invoice</h2>
+                <p>
+                    Select a confirmed or active subscription.
+                </p>
+            </div>
+
+            <div class="form-group">
+
+                <label for="subscriptionSelect">
+                    Subscription
+                </label>
+
+                <select id="subscriptionSelect">
+                    <option value="">
+                        Select subscription
+                    </option>
+                </select>
+
+            </div>
+
+            <div id="subscriptionPreview" class="subscription-preview">
+            </div>
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="invoiceIssueDate">
+                        Issue Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="invoiceIssueDate"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="invoiceDueDate">
+                        Due Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="invoiceDueDate"
+                    >
+
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button
+                    class="secondary-btn"
+                    data-close="generateModal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="primary-btn"
+                    id="createInvoiceBtn"
+                >
+                    Generate Invoice
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal-overlay" id="paymentModal">
+
+        <div class="modal no-print">
+
+            <button class="close-btn" data-close="paymentModal">
+                ×
+            </button>
+
+            <div class="modal-header">
+
+                <p class="eyebrow">PAYMENT</p>
+
+                <h2>Record Payment</h2>
+
+                <p id="paymentInvoiceLabel">
+                    Invoice
+                </p>
+
+            </div>
+
+
+            <div class="payment-summary">
+
+                <div>
+                    <span>Invoice Total</span>
+                    <strong id="paymentInvoiceTotal">
+                        ₹0.00
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Already Paid</span>
+                    <strong id="paymentAlreadyPaid">
+                        ₹0.00
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Amount Due</span>
+                    <strong id="paymentAmountDue">
+                        ₹0.00
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="paymentAmount">
+                    Payment Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="paymentAmount"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter amount"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Payment Method
+                </label>
+
+                <div class="payment-methods">
+
+                    <label class="method-option">
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="UPI"
+                            checked
+                        >
+                        <span>UPI</span>
+                    </label>
+
+                    <label class="method-option">
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="Card"
+                        >
+                        <span>Card</span>
+                    </label>
+
+                    <label class="method-option">
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="Cash"
+                        >
+                        <span>Cash</span>
+                    </label>
+
+                    <label class="method-option">
+                        <input
+                            type="radio"
+                            name="paymentMethod"
+                            value="Bank Transfer"
+                        >
+                        <span>Bank Transfer</span>
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="paymentDate">
+                        Payment Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="paymentDate"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="paymentNotes">
+                        Notes
+                    </label>
+
+                    <input
+                        type="text"
+                        id="paymentNotes"
+                        placeholder="Optional"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="demo-warning">
+                <strong>Demo payment only.</strong>
+                No real money is transferred and no sensitive payment details
+                are collected or stored.
+            </div>
+
+
+            <div class="form-actions">
+
+                <button
+                    class="secondary-btn"
+                    data-close="paymentModal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="primary-btn"
+                    id="recordPaymentBtn"
+                >
+                    Record Payment
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="modal-overlay" id="payNowModal">
+
+        <div class="modal no-print">
+
+            <button class="close-btn" data-close="payNowModal">
+                ×
+            </button>
+
+            <div class="modal-header">
+
+                <p class="eyebrow">DEMO PAYMENT</p>
+
+                <h2>Pay Invoice</h2>
+
+                <p>
+                    Simulated customer-side payment.
+                </p>
+
+            </div>
+
+
+            <div class="pay-now-amount">
+
+                <span>Amount to pay</span>
+
+                <strong id="payNowAmount">
+                    ₹0.00
+                </strong>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Select payment method
+                </label>
+
+                <div class="payment-methods">
+
+                    <label class="method-option">
+                        <input
+                            type="radio"
+                            name="payNowMethod"
+                            value="UPI"
+                            checked
+                        >
+                        <span>UPI</span>
+                    </label>
+
+                    <label class="method-option">
+                        <input
+                            type="radio"
+                            name="payNowMethod"
+                            value="Card"
+                        >
+                        <span>Card</span>
+                    </label>
+
+                    <label class="method-option">
+                        <input
+                            type="radio"
+                            name="payNowMethod"
+                            value="Bank Transfer"
+                        >
+                        <span>Bank Transfer</span>
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div class="demo-warning">
+                <strong>DEMO MODE</strong><br>
+                This does not process an actual payment.
+                Do not enter card numbers, CVV, UPI PINs or banking credentials.
+            </div>
+
+
+            <button
+                class="primary-btn full-width"
+                id="simulatePaymentBtn"
+            >
+                Simulate Successful Payment
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div id="toast" class="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
