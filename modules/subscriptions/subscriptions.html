@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brightloop | Subscriptions</title>
+    <link rel="stylesheet" href="subscriptions.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            BRIGHTLOOP
+        </div>
+
+        <nav class="sidebar-menu">
+            <a href="#" class="active">Customers & Subscriptions</a>
+            <a href="#">Dashboard</a>
+            <a href="#">Products</a>
+            <a href="#">Billing</a>
+            <a href="#">Reports</a>
+        </nav>
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Page Header -->
+        <header class="page-header">
+            <div>
+                <h1>Customer & Subscription Management</h1>
+                <p>Manage your customers and their subscriptions.</p>
+            </div>
+
+            <button class="btn btn-primary" id="addCustomerBtn">
+                + Add Customer
+            </button>
+        </header>
+
+
+        <!-- Statistics -->
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <h3>Total Customers</h3>
+                <p id="totalCustomers">0</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <h3>Total Subscriptions</h3>
+                <p id="totalSubscriptions">0</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✓</div>
+                <h3>Active Subscriptions</h3>
+                <p id="activeSubscriptions">0</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <h3>Expired Subscriptions</h3>
+                <p id="expiredSubscriptions">0</p>
+            </div>
+
+        </section>
+
+
+        <!-- Tabs -->
+        <section class="tabs">
+
+            <button class="tab-btn active" data-tab="customers">
+                Customers
+            </button>
+
+            <button class="tab-btn" data-tab="subscriptions">
+                Subscriptions
+            </button>
+
+        </section>
+
+
+        <!-- Customers Tab -->
+        <section class="tab-content active" id="customers">
+
+            <div class="panel">
+
+                <div class="panel-header">
+                    <h2>Customers</h2>
+
+                    <div class="search-filter">
+                        <input
+                            type="text"
+                            id="customerSearch"
+                            class="search-box"
+                            placeholder="Search customers..."
+                        >
+
+                        <button class="btn btn-primary" id="addCustomerBtn2">
+                            + Add Customer
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="customerTableBody">
+                            <!-- Customer records will appear here -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Subscriptions Tab -->
+        <section class="tab-content" id="subscriptions">
+
+            <div class="panel">
+
+                <div class="panel-header">
+                    <h2>Subscriptions</h2>
+
+                    <div class="search-filter">
+                        <input
+                            type="text"
+                            id="subscriptionSearch"
+                            class="search-box"
+                            placeholder="Search subscriptions..."
+                        >
+
+                        <button class="btn btn-primary" id="addSubscriptionBtn">
+                            + Add Subscription
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Subscription ID</th>
+                                <th>Customer</th>
+                                <th>Plan</th>
+                                <th>Start Date</th>
+                                <th>Expiry Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="subscriptionTableBody">
+                            <!-- Subscription records will appear here -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- Add Customer Modal -->
+<div class="modal" id="customerModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2 id="customerModalTitle">Add Customer</h2>
+            <button class="close-btn" id="closeCustomerModal">&times;</button>
+        </div>
+
+        <form id="customerForm">
+
+            <div class="form-grid">
+
+                <div class="form-group full-width">
+                    <label for="customerName">Customer Name</label>
+                    <input
+                        type="text"
+                        id="customerName"
+                        placeholder="Enter customer name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="customerEmail">Email Address</label>
+                    <input
+                        type="email"
+                        id="customerEmail"
+                        placeholder="Enter email address"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelCustomer">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+                    Save Customer
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Add Subscription Modal -->
+<div class="modal" id="subscriptionModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>Create Subscription</h2>
+            <button class="close-btn" id="closeSubscriptionModal">&times;</button>
+        </div>
+
+        <form id="subscriptionForm">
+
+            <div class="form-grid">
+
+                <div class="form-group full-width">
+                    <label for="subscriptionCustomer">Select Customer</label>
+                    <select id="subscriptionCustomer" required>
+                        <option value="">Choose a customer</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="subscriptionPlan">Select Plan</label>
+                    <select id="subscriptionPlan" required>
+                        <option value="">Choose a plan</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="expiryDate">Expiry Date</label>
+                    <input type="date" id="expiryDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentTerms">Payment Terms</label>
+                    <select id="paymentTerms" required>
+                        <option value="">Select payment terms</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Yearly">Yearly</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subscriptionStatus">Status</label>
+                    <select id="subscriptionStatus" required>
+                        <option value="Draft">Draft</option>
+                        <option value="Quotation">Quotation</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Active">Active</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelSubscription">
+                    Cancel
+                </button>
+
+                <button type="submit" class="btn btn-primary">
+                    Create Subscription
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- Toast Message -->
+<div class="toast" id="toast"></div>
+
+
+<!-- JavaScript -->
+<script src="subscriptions.js"></script>
+
+</body>
+</html>
